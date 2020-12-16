@@ -28,19 +28,25 @@ ninja --verbose README.md
 
 ```
 
-## readme-grapth-dot
+## readme-graph-dot
 
 ```bash
 ninja -t graph README.md
 ```
 
-### readme-grapth-dot-output
+### readme-graph-dot-output
 
 ```{.dot include=./build/ninja.README.md.dot}
 
 ```
 
-## readme-grapth-png
+## readme-graph-dot-xdot
+
+```bash
+detach -- xdot "${MASKFILE_DIR}/build/ninja.README.md.dot"
+```
+
+## readme-graph-png
 
 ```bash
 dot -Tpng -o./build/ninja.README.md.png ./build/ninja.README.md.dot

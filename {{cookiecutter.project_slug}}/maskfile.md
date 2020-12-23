@@ -28,6 +28,18 @@ ninja --verbose README.md
 
 ```
 
+### ninja custom-rule
+
+```{.ninja include=build.ninja snippet=custom-rule}
+
+```
+
+### ninja custom-build
+
+```{.ninja include=build.ninja snippet=custom-build}
+
+```
+
 ## readme-graph-dot
 
 ```bash

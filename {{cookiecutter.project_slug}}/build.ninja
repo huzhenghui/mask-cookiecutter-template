@@ -17,6 +17,12 @@ rule ghq
   command = ghq get --update "$repository" && find -d "$link_dirname" -exec rmdir {} \; && ln -Fs "$$(ghq list --full-path $repository)" "$link_dirname"
   generator = 1
 
+rule github-markdown-toc
+  command = gh-md-toc --hide-header --hide-footer --no-escape $in > $out
+
+rule copy_alternate
+  command = if [[ -f "$alternate" ]]; then cp "$alternate" "$out"; else cp "$in" "$out"; fi;
+
 # end: rule in template
 #######################################
 
@@ -37,6 +43,15 @@ build ./build/ninja.README.md.dot : mask-tee | ./maskfile.md
 build ./build/ninja.README.md.png : mask | ./build/ninja.README.md.dot
   mask_subcommand = readme-graph-png
 
+build ./build/pandoc-lua-filters/include-files/include-files.lua : ghq
+  repository = https://github.com/pandoc/lua-filters
+  link_dirname = ./build/pandoc-lua-filters
+
+build ./build/temp/README.md : copy_alternate ./maskfile.md
+  alternate = ./README.md
+
+build ./build/README.TOC.md : github-markdown-toc ./build/temp/README.md
+
 # end: build in template
 #######################################
 
@@ -56,7 +71,9 @@ build ./build/ninja.README.md.png : mask | ./build/ninja.README.md.dot
 build README.md : pandocomatic maskfile.md | $
   build.ninja $
   ./build/ninja.README.md.dot $
-  ./build/ninja.README.md.png
+  ./build/ninja.README.md.png $
+  ./build/pandoc-lua-filters/include-files/include-files.lua $
+  ./build/README.TOC.md
 
 default README.md
 # end: build README.md

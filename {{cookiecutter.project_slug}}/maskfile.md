@@ -2,15 +2,21 @@
 
     pandocomatic_:
         pandoc:
-            from: markdown
-            to: markdown-fenced_code_attributes
+            from: markdown-smart
+            to: gfm
             filter:
             - pandoc-include-code
+            lua-filter:
+            - ./build/pandoc-lua-filters/include-files/include-files.lua
             output: README.md
 
 ...
 
 # {{ cookiecutter.project_name }}
+
+```{.include}
+./build/README.TOC.md
+```
 
 # https://github.com/huzhenghui/mask-awesome
 

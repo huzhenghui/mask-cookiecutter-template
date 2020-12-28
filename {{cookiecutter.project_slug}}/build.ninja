@@ -8,7 +8,7 @@ rule mask
   command = mask $mask_subcommand
 
 rule mask-tee
-  command = mask $mask_subcommand 2>&1 | tee $out 1> /dev/null
+  command = mask --maskfile $in $mask_subcommand 2>&1 | tee $out 1> /dev/null
 
 rule mask-screenshot
   command = $
@@ -62,7 +62,7 @@ rule copy_alternate
 #######################################
 # begin: build in template
 
-build ./build/ninja.README.md.dot : mask-tee | ./maskfile.md
+build ./build/ninja.README.md.dot : mask-tee ./maskfile.md
   mask_subcommand = readme-graph-dot
 
 build ./build/ninja.README.md.png : mask | ./build/ninja.README.md.dot

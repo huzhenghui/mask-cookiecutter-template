@@ -10,18 +10,43 @@ rule mask
 rule mask-tee
   command = mask $mask_subcommand 2>&1 | tee $out 1> /dev/null
 
+rule mask-screenshot
+  command = $
+    regular_logfile="./build/temp/$$(basename $out).mask-screenshot.logfile" && $
+    rm -f -v "$${regular_logfile}" && $
+    until [[ -s "$${regular_logfile}" ]]; do $
+      screen_logfile="$$(mktemp -d)/logfile"; $
+      echo "$${screen_logfile}"; $
+      mkfifo "$${screen_logfile}"; $
+      screen -L -Logfile "$${screen_logfile}" $
+        -dmS mask-screenshot-"$$(basename $out)" $
+        sh -c "stdbuf -o0 mask --maskfile $in $mask_subcommand; $
+          date +'%F %T %Z %z - %+ https://github.com/huzhenghui' | lolcat;"; $
+      dd bs=1 if="$${screen_logfile}" of="$${regular_logfile}"; $
+    done && $
+    ansifilter --html --encoding=utf8 --input="$${regular_logfile}" | $
+      tee ./build/temp/"$$(basename $out)".mask-screenshot.html | $
+      wkhtmltoimage --format png - "$out"
+
 rule pandocomatic
   command = pandocomatic --input $in --output $out
 
 rule ghq
-  command = ghq get --update "$repository" && find -d "$link_dirname" -exec rmdir {} \; && ln -Fs "$$(ghq list --full-path $repository)" "$link_dirname"
+  command = ghq get --update "$repository" && $
+    find -d "$link_dirname" -exec rmdir {} \; && $
+    ln -Fs "$$(ghq list --full-path $repository)" "$link_dirname"
   generator = 1
 
 rule github-markdown-toc
   command = gh-md-toc --hide-header --hide-footer --no-escape $in > $out
 
 rule copy_alternate
-  command = if [[ -f "$alternate" ]]; then cp "$alternate" "$out"; else cp "$in" "$out"; fi;
+  command = if [[ -f "$alternate" ]]; $
+    then $
+      cp "$alternate" "$out"; $
+    else $
+      cp "$in" "$out"; $
+    fi;
 
 # end: rule in template
 #######################################

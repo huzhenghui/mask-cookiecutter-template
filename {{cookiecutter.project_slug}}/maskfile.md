@@ -1,24 +1,26 @@
 ---
-
-    pandocomatic_:
-        pandoc:
-            from: markdown-smart
-            to: gfm
-            filter:
-            - pandoc-include-code
-            lua-filter:
-            - ./build/pandoc-lua-filters/include-files/include-files.lua
-            output: README.md
-
+pandocomatic_:
+    pandoc:
+        from: markdown-smart
+        to: gfm
+        filter:
+        - pandoc-include-code
+        lua-filter:
+        - ./build/pandoc-lua-filters/include-files/include-files.lua
+        output: README.md
 ...
 
 # {{ cookiecutter.project_name }}
 
+<!-- markdownlint-disable MD007 MD030 -->
 ```{.include}
 ./build/README.TOC.md
 ```
+<!-- markdownlint-enable MD007 MD030 -->
 
-# https://github.com/huzhenghui/mask-awesome
+# Mask SubCommands
+
+[Mask Awesome](https://github.com/huzhenghui/mask-awesome)
 
 ## begin: mask task in template
 

@@ -10,6 +10,9 @@ rule mask
 rule mask-tee
   command = mask --maskfile $in $mask_subcommand 2>&1 | tee $out 1> /dev/null
 
+rule mask-stdout-tee
+  command = mask --maskfile $in $mask_subcommand 2>/dev/null | tee $out 1> /dev/null
+
 rule mask-screenshot
   command = $
     regular_logfile="./build/temp/$$(basename $out).mask-screenshot.logfile" && $

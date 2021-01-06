@@ -16,6 +16,16 @@ rule mask-stdout-tee
 rule mask-stderr-tee
   command = bash -c 'mask $mask_subcommand 1>/dev/null 2> >(tee $out)'
 
+# <!-- markdownlint-disable MD013 -->
+rule mask-man-markdown
+  command = mask --maskfile $in $mask_subcommand | $
+    ul | $
+    ansifilter --bbcode | $
+    inv --search-root="$$(ghq list --full-path https://github.com/huzhenghui/pyinvoke-awesome)/bbcode" bbcode-parser-format | $
+    pandoc --from=html --to=markdown | $
+    tee $out 1> /dev/null
+# <!-- markdownlint-enable MD013 -->
+
 rule mask-screenshot
   command = $
     regular_logfile="./build/temp/$$(basename $out).mask-screenshot.logfile" && $
@@ -100,7 +110,7 @@ build ./build/README.TOC.md : github-markdown-toc ./build/temp/README.md
 # escape the newline (continue the current line across a line break).
 # the first 4 line in this build is template
 build README.md : pandocomatic maskfile.md | $
-  build.ninja $
+  ./build.ninja $
   ./build/ninja.README.md.dot $
   ./build/ninja.README.md.png $
   ./build/pandoc-lua-filters/include-files/include-files.lua $
@@ -108,4 +118,12 @@ build README.md : pandocomatic maskfile.md | $
 
 default README.md
 # end: build README.md
+#######################################
+
+#######################################
+# start snippet report-build
+
+# report build here
+
+# end snippet report-build
 #######################################

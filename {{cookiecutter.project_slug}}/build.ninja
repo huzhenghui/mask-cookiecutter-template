@@ -1,5 +1,6 @@
 builddir=./build
 mask_subcommand = --help
+mask_stdout_csv_markdowndelimiter = ","
 
 #######################################
 # begin: rule in template
@@ -25,6 +26,11 @@ rule mask-man-markdown
     pandoc --from=html --to=markdown | $
     tee $out 1> /dev/null
 # <!-- markdownlint-enable MD013 -->
+
+rule mask-stdout-csv-markdown
+  command = mask --maskfile $in $mask_subcommand 2>/dev/null | $
+    csvtomd --delimiter "$$(echo $mask_stdout_csv_markdowndelimiter)" | $
+    tee $out 1> /dev/null
 
 rule mask-screenshot
   command = $
@@ -76,7 +82,23 @@ rule copy_alternate
 #######################################
 
 #######################################
-# begin: build in template
+# start snippet custom-build
+
+# custom build here
+
+# end snippet custom-build
+#######################################
+
+#######################################
+# start snippet report-build
+
+# report build here
+
+# end snippet report-build
+#######################################
+
+#######################################
+# begin: readme-build in template
 
 build ./build/ninja.README.md.dot : mask-tee ./maskfile.md
   mask_subcommand = readme-graph-dot
@@ -93,15 +115,15 @@ build ./build/temp/README.md : copy_alternate ./maskfile.md
 
 build ./build/README.TOC.md : github-markdown-toc ./build/temp/README.md
 
-# end: build in template
+# end: readme-build in template
 #######################################
 
 #######################################
-# start snippet custom-build
+# start snippet readme-build
 
-# custom build here
+# readme build here
 
-# end snippet custom-build
+# end snippet readme-build
 #######################################
 
 #######################################
@@ -118,12 +140,4 @@ build README.md : pandocomatic maskfile.md | $
 
 default README.md
 # end: build README.md
-#######################################
-
-#######################################
-# start snippet report-build
-
-# report build here
-
-# end snippet report-build
 #######################################

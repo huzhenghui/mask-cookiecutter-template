@@ -24,11 +24,7 @@ pandocomatic_:
 
 ## begin: mask task in template
 
-## readme-md
-
-```bash
-ninja --verbose README.md
-```
+## ninja custom
 
 ### ninja custom-rule
 
@@ -39,6 +35,24 @@ ninja --verbose README.md
 ### ninja custom-build
 
 ```{.ninja include=build.ninja snippet=custom-build}
+
+```
+
+### ninja report-build
+
+```{.ninja include=build.ninja snippet=report-build}
+
+```
+
+## readme-md
+
+```bash
+ninja --verbose README.md
+```
+
+### ninja readme-build
+
+```{.ninja include=build.ninja snippet=readme-build}
 
 ```
 
@@ -67,14 +81,6 @@ dot -Tpng -o./build/ninja.README.md.png ./build/ninja.README.md.dot
 ```
 
 ![README.md](./build/ninja.README.md.png)
-
-## report
-
-### ninja report-build
-
-```{.ninja include=build.ninja snippet=report-build}
-
-```
 
 ## build.ninja
 

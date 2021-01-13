@@ -84,7 +84,7 @@ rule copy_alternate
 #######################################
 # start snippet build-all
 
-build all: phony README.md ./report-output/report.md
+build all: phony README.md
 
 default all
 
@@ -156,10 +156,7 @@ build README-template : phony $
 # escape the newline (continue the current line across a line break).
 # start snippet readme-build
 
-build README.md : pandocomatic maskfile.md | README-template $
-  ./build/agedu-version-output.txt $
-  ./build/agedu-help-output.txt $
-  ./build/man/man-agedu.auto-generated.md
+build README.md : pandocomatic maskfile.md | README-template
 
 # end snippet readme-build
 #######################################

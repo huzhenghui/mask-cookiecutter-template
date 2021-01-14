@@ -19,7 +19,8 @@ rule mask-stderr-tee
 
 # <!-- markdownlint-disable MD013 -->
 rule mask-man-markdown
-  command = mask --maskfile $in $mask_subcommand | $
+  command = set -e && set -o pipefail && $
+    mask --maskfile $in $mask_subcommand | $
     ul | $
     ansifilter --bbcode | $
     inv --search-root="$$(ghq list --full-path https://github.com/huzhenghui/pyinvoke-awesome)/bbcode" bbcode-parser-format | $
@@ -70,6 +71,19 @@ rule copy_alternate
       cp "$in" "$out"; $
     fi;
 
+rule cmdshelf-repository
+  command = $$( $
+    cmdshelf remote list | ack "^$cmdshelf_name" 1>&2 || $
+    cmdshelf remote add "$cmdshelf_name" "$cmdshelf_url" 1>&2 $
+    ) && $
+    repository_path="$$(realpath $${HOME}/.cmdshelf/remote/$cmdshelf_name)" && $
+    echo "$${repository_path}" && $
+    stub_path="$$(realpath ./build/$cmdshelf_name)" && $
+    echo "$${stub_path}" && $
+    find -d "$${stub_path}" -exec rmdir {} \; && $
+    ln -Fs "$${repository_path}" "$${stub_path}"
+  generator = 1
+
 # end: rule in template
 #######################################
 
@@ -110,6 +124,7 @@ default all
 #######################################
 # begin: readme-build in template
 
+# ninja will ceate ./build/pandoc-lua-filters/include-files/ automaticly
 build ./build/pandoc-lua-filters/include-files/include-files.lua : ghq
   repository = https://github.com/pandoc/lua-filters
   link_dirname = ./build/pandoc-lua-filters
@@ -146,7 +161,7 @@ build README-template : phony $
 #######################################
 # start snippet custom-readme-build
 
-# readme build here
+build README-custom : phony
 
 # end snippet custom-readme-build
 #######################################
@@ -156,7 +171,7 @@ build README-template : phony $
 # escape the newline (continue the current line across a line break).
 # start snippet readme-build
 
-build README.md : pandocomatic maskfile.md | README-template
+build README.md : pandocomatic maskfile.md | README-template README-custom
 
 # end snippet readme-build
 #######################################

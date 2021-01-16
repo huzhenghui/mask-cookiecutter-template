@@ -124,7 +124,7 @@ default all
 #######################################
 # begin: readme-build in template
 
-# ninja will ceate ./build/pandoc-lua-filters/include-files/ automaticly
+# ninja will create ./build/pandoc-lua-filters/include-files/ automatically
 build ./build/pandoc-lua-filters/include-files/include-files.lua : ghq
   repository = https://github.com/pandoc/lua-filters
   link_dirname = ./build/pandoc-lua-filters

@@ -70,6 +70,9 @@ rule copy_alternate
       cp "$in" "$out"; $
     fi;
 
+rule dot
+  command = dot -Tpng -o$out $in
+
 rule ghq
   command = ghq get --update "$repository" && $
     find -d "$link_dirname" -exec rmdir {} \; && $

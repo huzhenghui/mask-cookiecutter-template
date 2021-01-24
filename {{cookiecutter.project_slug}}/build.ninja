@@ -15,7 +15,7 @@ rule mask-stdout-tee
   command = mask --maskfile $in $mask_subcommand 2>/dev/null | tee $out 1> /dev/null
 
 rule mask-stderr-tee
-  command = bash -c 'mask $mask_subcommand 1>/dev/null 2> >(tee $out)'
+  command = bash -c 'mask $mask_subcommand 1>/dev/null 2> >(tee $out)' || echo $$?
 
 # <!-- markdownlint-disable MD013 -->
 rule mask-man-markdown

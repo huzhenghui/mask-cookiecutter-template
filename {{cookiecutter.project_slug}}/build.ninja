@@ -33,6 +33,11 @@ rule mask-stdout-csv-markdown
     csvtomd --delimiter "$$(echo $mask_stdout_csv_markdowndelimiter)" | $
     tee $out 1> /dev/null
 
+rule mask-stdout-json
+  command = mask --maskfile $in $mask_subcommand 2>/dev/null | $
+    jq | $
+    tee $out 1> /dev/null
+
 rule mask-screenshot
   command = $
     regular_logfile="./build/temp/$$(basename $out).mask-screenshot.logfile" && $
@@ -54,12 +59,6 @@ rule mask-screenshot
 rule pandocomatic
   command = pandocomatic --input $in --output $out
 
-rule ghq
-  command = ghq get --update "$repository" && $
-    find -d "$link_dirname" -exec rmdir {} \; && $
-    ln -Fs "$$(ghq list --full-path $repository)" "$link_dirname"
-  generator = 1
-
 rule github-markdown-toc
   command = gh-md-toc --hide-header --hide-footer --no-escape $in > $out
 
@@ -70,6 +69,12 @@ rule copy_alternate
     else $
       cp "$in" "$out"; $
     fi;
+
+rule ghq
+  command = ghq get --update "$repository" && $
+    find -d "$link_dirname" -exec rmdir {} \; && $
+    ln -Fs "$$(ghq list --full-path $repository)" "$link_dirname"
+  generator = 1
 
 rule cmdshelf-repository
   command = $$( $

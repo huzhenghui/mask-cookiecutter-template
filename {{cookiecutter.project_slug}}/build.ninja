@@ -1,6 +1,7 @@
 builddir=./build
 mask_subcommand = --help
 mask_stdout_csv_markdowndelimiter = ","
+jupyter_nbconvert_markdown_output_files_dir=./build/jupyter-nbconvert-markdown-output-files
 
 #######################################
 # begin: rule in template
@@ -91,6 +92,15 @@ rule cmdshelf-repository
     find -d "$${stub_path}" -exec rmdir {} \; && $
     ln -Fs "$${repository_path}" "$${stub_path}"
   generator = 1
+
+# <!-- markdownlint-disable MD013 -->
+rule jupyter-nbconvert-markdown
+  command = jupyter nbconvert $
+    --to=markdown $
+    --NbConvertApp.output_files_dir="$jupyter_nbconvert_markdown_output_files_dir" $
+    --output="$out" $
+    "$in"
+# <!-- markdownlint-enble MD013 -->
 
 # end: rule in template
 #######################################

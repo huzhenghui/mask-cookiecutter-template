@@ -1,8 +1,8 @@
 ---
 pandocomatic_:
     pandoc:
-        from: markdown-smart
-        to: gfm
+        from: markdown-smart+tex_math_dollars
+        to: gfm+tex_math_dollars
         filter:
         - pandoc-include-code
         lua-filter:

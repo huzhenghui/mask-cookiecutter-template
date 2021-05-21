@@ -12,6 +12,10 @@ rule mask
 rule mask-tee
   command = mask --maskfile $in $mask_subcommand 2>&1 | tee $out 1> /dev/null
 
+rule mask-ansifilter
+  command = mask --maskfile $in $mask_subcommand 2>&1 | $
+    ansifilter | tee $out 1> /dev/null
+
 rule mask-stdout-tee
   command = mask --maskfile $in $mask_subcommand 2>/dev/null | tee $out 1> /dev/null
 
